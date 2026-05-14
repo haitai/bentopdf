@@ -627,7 +627,9 @@ const init = async () => {
     }
 
     // Apply to all page uploaders
-    const pageUploaders = document.querySelectorAll('#tool-uploader');
+    const pageUploaders = document.querySelectorAll(
+      '#tool-uploader, #signature-editor'
+    );
     pageUploaders.forEach((uploader) => {
       if (enabled) {
         uploader.classList.remove('max-w-2xl', 'max-w-5xl');
@@ -849,10 +851,10 @@ const init = async () => {
 
       if (confirmMode) {
         dom.warningCancelBtn.style.display = '';
-        dom.warningConfirmBtn.textContent = 'Proceed';
+        dom.warningConfirmBtn.textContent = t('warning.proceed');
       } else {
         dom.warningCancelBtn.style.display = 'none';
-        dom.warningConfirmBtn.textContent = 'OK';
+        dom.warningConfirmBtn.textContent = t('alert.ok');
       }
 
       const handleConfirm = () => {

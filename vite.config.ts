@@ -530,6 +530,7 @@ export default defineConfig(() => {
     resolve: {
       alias: {
         '@/types': resolve(__dirname, 'src/js/types/index.ts'),
+        '@': resolve(__dirname, 'src'),
         stream: 'stream-browserify',
         zlib: 'browserify-zlib',
       },
@@ -758,6 +759,15 @@ export default defineConfig(() => {
             __dirname,
             'src/pages/bates-numbering.html'
           ),
+        },
+        output: {
+          assetFileNames: (assetInfo) => {
+            const name = assetInfo.names?.[0] ?? '';
+            if (name.endsWith('.mjs')) {
+              return 'assets/[name]-[hash].js';
+            }
+            return 'assets/[name]-[hash][extname]';
+          },
         },
       },
     },
