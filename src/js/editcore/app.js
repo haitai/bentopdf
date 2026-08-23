@@ -3765,11 +3765,12 @@ function openEditor(spec, caret) {
         openPv = lockedPv;
         renderLockedLines(ed, para.runs, lockedPv, para, para.box.x);
         singleLine = false;
+        const countable = (s) => s.replace(/[\u200B\u2060\n]/g, '').length;
         const wantChars = para.runs.reduce(
-          (n, r) => n + (r.text ? r.text.length : 0),
+          (n, r) => n + (r.text ? countable(r.text) : 0),
           0
         );
-        const gotChars = ed.textContent.replace(/[\u200B\u2060]/g, '').length;
+        const gotChars = countable(ed.textContent);
         if (wantChars > 0 && gotChars < wantChars * 0.98) {
           ed.textContent = '';
           delete ed.dataset.locked;
@@ -3840,6 +3841,7 @@ function openEditor(spec, caret) {
     pristine: !!spec.para && ed.dataset.locked === '1',
   };
   if (state.editing.pristine) wrap.classList.add('pristine');
+  else if (spec.para) renderPage();
   ed.focus();
   placeCaret(ed, caret?.x, caret?.y);
   const refocus = () => {
@@ -9092,7 +9094,15 @@ async function saveFile() {
   a.click();
   URL.revokeObjectURL(a.href);
   state.dirty = false;
-  toast('Saved ' + ((bytes.length / 1024) | 0) + ' KB');
+  const savedKb = (bytes.length / 1024) | 0;
+  if (onSaved) onSaved(savedKb, state.fileName);
+  else toast('Saved ' + savedKb + ' KB');
+}
+
+let onSaved = null;
+
+function setOnSaved(fn) {
+  onSaved = typeof fn === 'function' ? fn : null;
 }
 
 function wireUI() {
@@ -9975,4 +9985,11 @@ async function addImageFromFile(file) {
   } else if (state.undo.length) state.undo.pop();
 }
 
-export { openFile, engineReady, setZoom, getZoom, getDocDescription };
+export {
+  openFile,
+  engineReady,
+  setZoom,
+  getZoom,
+  getDocDescription,
+  setOnSaved,
+};
