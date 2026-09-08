@@ -1695,3 +1695,9 @@ details > summary .icon {
   gap: 0.25rem;
   padding: 0.25rem 0;
 }
+
+
+/* Hide something you may dont need*/
+nav > div > div > div:not(:first-child),section#hero-section > div:last-child > a:last-child,.py-10,#mobile-menu,#donation-ribbon,#features-section,section#features-section + div,#security-compliance-section,section#security-compliance-section + div,#faq-accordion,section#faq-accordion + div,#testimonials-section,footer > div > div > div:not(:first-child){
+  display:none;
+}
